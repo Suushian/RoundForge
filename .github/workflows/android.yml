@@ -2,7 +2,7 @@ name: Android APK
 
 on:
   push:
-    branches: [main]
+    branches: [main, "release/*"]
     tags: ["v*"]
   pull_request:
     branches: [main]
@@ -46,8 +46,19 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Publish APK to GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/release/')
+        uses: softprops/action-gh-release@v3
         with:
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.1.0' }}
+          target_commitish: main
+          name: RoundForge v0.1.0
+          body: |
+            Initial test release of RoundForge.
+
+            - Configurable martial arts rounds and rest periods
+            - Start, pause, reset, and restart controls
+            - Audio cues for round/rest transitions and final countdown
+
+            This release contains a debug-signed APK for testing.
           files: app/build/outputs/apk/debug/app-debug.apk
           generate_release_notes: true
