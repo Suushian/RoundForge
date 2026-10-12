@@ -4,24 +4,34 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    <!-- Minimal stopwatch silhouette with the same black, white and neon-green language as the concept. -->
     <path
         android:fillColor="#00000000"
-        android:strokeColor="#C7FF4A"
-        android:strokeWidth="4.5"
+        android:strokeColor="#F4F6F2"
+        android:strokeWidth="5.5"
         android:strokeLineCap="round"
-        android:pathData="M22,66 A34,34 0,1 1,79,80" />
+        android:pathData="M48,19 L60,19 M54,19 L54,26 M68,24 L74,18" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#F4F6F2"
+        android:strokeWidth="5.5"
+        android:strokeLineCap="round"
+        android:pathData="M78,34 A31,31 0,1 1,31 31" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#00E58B"
+        android:strokeWidth="5.5"
+        android:strokeLineCap="round"
+        android:pathData="M31,31 A31,31 0,0 1,78 34" />
     <path
         android:fillColor="#F4F6F2"
-        android:pathData="M51,25 C45,25 41,30 41,36 C41,42 45,46 51,46 C57,46 61,41 61,35 C61,29 57,25 51,25 Z
-            M46,47 L38,51 L31,62 C29,66 32,70 36,68 L44,59 L49,57 L54,66 L49,79 L40,88 L47,92 L59,82 L64,69 L61,57 L72,56 L82,49 C86,46 83,41 79,43 L68,48 L57,48 Z
-            M47,55 L55,53 L61,58 L58,64 L52,62 Z" />
-    <path
-        android:fillColor="#00DFA5"
-        android:pathData="M75,17 L84,17 L84,25 L75,25 Z" />
+        android:pathData="M49,36 C44,36 41,40 41,45 C41,50 44,53 49,53 C54,53 57,49 57,44 C57,39 54,36 49,36 Z
+            M43,54 L35,59 L31,68 C30,71 33,74 36,72 L43,64 L48,62 L53,68 L49,78 L41,86 L47,90 L58,81 L63,69 L60,59 L70,58 L80,52 C83,50 81,46 77,48 L67,53 L56,53 Z
+            M48,62 L54,59 L59,64 L56,69 L51,68 Z" />
     <path
         android:fillColor="#00000000"
-        android:strokeColor="#00DFA5"
+        android:strokeColor="#00E58B"
         android:strokeWidth="2.8"
         android:strokeLineCap="round"
-        android:pathData="M17,43 Q11,53 17,63 M91,43 Q97,53 91,63" />
+        android:pathData="M15,44 Q10,53 15,62 M93,44 Q98,53 93,62" />
 </vector>
