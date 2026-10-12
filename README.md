@@ -17,7 +17,7 @@ Every push to `main` runs the Android GitHub Actions workflow. Successful builds
 - [Project roadmap](PROJECT_PLAN.md)
 
 ## Local build
-Requires JDK 17, Android SDK platform 35, and Gradle 8.9.
+Requires JDK 17, Android SDK platform 35, build-tools 35.0.0, and Gradle 8.9.
 
 ```bash
 gradle --no-daemon assembleDebug
