@@ -36,6 +36,15 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.9"
+      - name: Download CC0 boxing bell sound
+        shell: bash
+        run: |
+          mkdir -p app/src/main/res/raw
+          curl --fail --location --retry 3 \
+            "https://upload.wikimedia.org/wikipedia/commons/6/64/Dingdingding.wav" \
+            --output app/src/main/res/raw/boxing_bell.wav
+          file app/src/main/res/raw/boxing_bell.wav
+          test -s app/src/main/res/raw/boxing_bell.wav
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
       - name: Upload APK artifact

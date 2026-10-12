@@ -1,10 +1,8 @@
 package com.suushian.roundforge
 
 import android.content.Context
-import android.media.AudioAttributes
-import android.media.AudioFormat
 import android.media.AudioManager
-import android.media.AudioTrack
+import android.media.MediaPlayer
 import android.media.ToneGenerator
 import android.os.Bundle
 import android.os.Handler
@@ -28,9 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
-import kotlin.math.PI
-import kotlin.math.exp
-import kotlin.math.sin
 
 private val Ink = Color(0xFF090B0D)
 private val Panel = Color(0xFF15191D)
@@ -64,59 +59,17 @@ private fun playCue(context: Context, finish: Boolean = false) {
     }
 }
 
-/**
- * Synthesizes a short metallic competition bell. The inharmonic partials and
- * decaying envelope give it a resonant gong-like character without bundling
- * a copyrighted recording.
- */
-private fun playRoundBell() {
-    Thread {
-        val sampleRate = 44100
-        val durationMs = 2100
-        val sampleCount = sampleRate * durationMs / 1000
-        val pcm = ByteArray(sampleCount * 2)
-        for (i in 0 until sampleCount) {
-            val t = i.toDouble() / sampleRate
-            val attack = 1.0 - exp(-t * 110.0)
-            val decay = exp(-t * 2.05)
-            val fundamental = sin(2.0 * PI * 920.0 * t)
-            val partial2 = 0.72 * sin(2.0 * PI * 1375.0 * t + 0.2)
-            val partial3 = 0.46 * sin(2.0 * PI * 1840.0 * t + 0.4)
-            val partial4 = 0.24 * sin(2.0 * PI * 2470.0 * t + 0.1)
-            val sample = ((fundamental + partial2 + partial3 + partial4) * attack * decay * 0.38 * 32767.0)
-                .toInt().coerceIn(-32768, 32767).toShort()
-            pcm[i * 2] = (sample.toInt() and 0xFF).toByte()
-            pcm[i * 2 + 1] = ((sample.toInt() shr 8) and 0xFF).toByte()
+/** Plays the real boxing bell recording bundled into the APK at build time. */
+private fun playRoundBell(context: Context) {
+    try {
+        MediaPlayer.create(context, R.raw.boxing_bell)?.apply {
+            setOnCompletionListener { it.release() }
+            setOnErrorListener { player, _, _ -> player.release(); true }
+            start()
         }
-
-        var track: AudioTrack? = null
-        try {
-            track = AudioTrack.Builder()
-                .setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build()
-                )
-                .setAudioFormat(
-                    AudioFormat.Builder()
-                        .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                        .setSampleRate(sampleRate)
-                        .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-                        .build()
-                )
-                .setBufferSizeInBytes(pcm.size)
-                .setTransferMode(AudioTrack.MODE_STATIC)
-                .build()
-            track.write(pcm, 0, pcm.size)
-            track.play()
-            Thread.sleep(durationMs.toLong() + 180L)
-        } catch (_: Exception) {
-            // Keep audio failures from interrupting the timer.
-        } finally {
-            track?.release()
-        }
-    }.start()
+    } catch (_: Exception) {
+        // Audio failures must not interrupt the timer.
+    }
 }
 
 @Composable
@@ -142,7 +95,7 @@ private fun RoundForgeApp() {
             isRest = false
             secondsLeft = roundLength
             roundNumber = (roundNumber + 1).coerceAtMost(roundsTotal)
-            if (soundEnabled) playRoundBell()
+            if (soundEnabled) playRoundBell(context)
         } else if (roundNumber >= roundsTotal) {
             secondsLeft = 0
             running = false
@@ -234,7 +187,7 @@ private fun RoundForgeApp() {
                                 running = false
                                 if (soundEnabled) playCue(context)
                             } else {
-                                if (!isRest && soundEnabled) playRoundBell()
+                                if (!isRest && soundEnabled) playRoundBell(context)
                                 running = true
                             }
                         },
