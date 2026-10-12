@@ -187,7 +187,7 @@ private fun RoundForgeApp() {
                                 running = false
                                 if (soundEnabled) playCue(context)
                             } else {
-                                if (!isRest && soundEnabled) playRoundBell()
+                                if (!isRest && soundEnabled) playRoundBell(context)
                                 running = true
                             }
                         },
